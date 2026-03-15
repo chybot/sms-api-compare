@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 import yaml from '@modyfi/vite-plugin-yaml';
 
 export default defineConfig({
-  site: 'https://sms-api-compare.pages.dev',
+  site: 'https://smsapicompare.com',
   output: 'static',
   integrations: [
     react(),
