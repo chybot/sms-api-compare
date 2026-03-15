@@ -1,0 +1,89 @@
+---
+interface Provider {
+  name: string;
+  slug: string;
+  tagline?: string;
+  pricing?: {
+    outbound_sms?: number;
+  };
+  features?: Record<string, boolean>;
+  rating?: number;
+}
+
+interface Props {
+  provider: Provider;
+}
+
+const { provider } = Astro.props;
+
+const enabledFeatures = Object.entries(provider.features ?? {})
+  .filter(([, v]) => v)
+  .map(([k]) => k);
+
+const featureLabels: Record<string, string> = {
+  sms: 'SMS',
+  voice: 'Voice',
+  whatsapp: 'WhatsApp',
+  email: 'Email',
+  verify: 'Verify',
+  number_lookup: 'Lookup',
+  short_codes: 'Short Codes',
+  mms: 'MMS',
+};
+
+const displayPrice = provider.pricing?.outbound_sms;
+---
+
+<div class="bg-white border border-border rounded-xl p-6 hover:shadow-lg transition-shadow duration-200">
+  <!-- Header -->
+  <div class="flex items-start justify-between mb-4">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900">{provider.name}</h3>
+      {provider.tagline && (
+        <p class="text-sm text-gray-500 mt-1">{provider.tagline}</p>
+      )}
+    </div>
+    <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xl flex-shrink-0">
+      {provider.name.charAt(0)}
+    </div>
+  </div>
+
+  <!-- Price -->
+  {displayPrice !== undefined && (
+    <div class="mb-4">
+      <span class="text-2xl font-extrabold text-gray-900">${displayPrice.toFixed(4)}</span>
+      <span class="text-sm text-gray-500">/SMS</span>
+    </div>
+  )}
+
+  <!-- Rating Placeholder -->
+  <div class="flex items-center gap-1 mb-4">
+    {[1, 2, 3, 4, 5].map((star) => (
+      <svg
+        class:list={['w-4 h-4', star <= (provider.rating ?? 0) ? 'text-yellow-400' : 'text-gray-200']}
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+      </svg>
+    ))}
+    {provider.rating && <span class="text-sm text-gray-500 ml-1">{provider.rating}/5</span>}
+  </div>
+
+  <!-- Feature Badges -->
+  <div class="flex flex-wrap gap-2 mb-6">
+    {enabledFeatures.map((key) => (
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+        {featureLabels[key] ?? key}
+      </span>
+    ))}
+  </div>
+
+  <!-- CTA -->
+  <a
+    href={`/compare/twilio-vs-${provider.slug}`}
+    class="block w-full text-center bg-primary text-white font-semibold py-2.5 rounded-lg hover:bg-primary-dark transition-colors"
+  >
+    Compare
+  </a>
+</div>

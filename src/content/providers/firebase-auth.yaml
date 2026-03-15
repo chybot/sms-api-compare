@@ -1,0 +1,53 @@
+slug: firebase-auth
+name: "Firebase Auth"
+tagline: "Dead-simple phone authentication for mobile and web apps powered by Google Cloud"
+founded: 2011
+hq: "Mountain View, California"
+website: https://firebase.google.com/products/auth
+
+pricing:
+  sms_outbound_us: null
+  sms_inbound_us: null
+  phone_number_local: null
+  phone_number_tollfree: null
+  verify_per_auth: 0.06
+  volume_discount: "first 10,000 verifications free per month"
+  free_trial: true
+  free_credits: 0.00
+
+features:
+  sms: false
+  voice: false
+  whatsapp: false
+  email: false
+  verify_otp: true
+  number_lookup: false
+  short_code: false
+  10dlc: false
+  flow_builder: null
+  sdk_languages: ["python", "node", "java", "ios", "android", "flutter", "unity", "cpp"]
+
+compliance:
+  hipaa: false
+  soc2: true
+  pci_dss: false
+  gdpr: true
+
+performance:
+  sla: "99.95%"
+  global_coverage: "global"
+
+pros:
+  - "Dead simple phone authentication integration"
+  - "Generous free tier with 10,000 verifications per month"
+  - "Deep Firebase and Google Cloud ecosystem integration"
+  - "Cross-platform SDKs including Flutter and Unity"
+
+cons:
+  - "Not a general-purpose SMS API, only handles OTP and auth"
+  - "No customization of SMS message content"
+  - "Limited to the Firebase ecosystem"
+  - "Cannot send marketing, transactional, or notification SMS"
+
+best_for: "Mobile and web apps needing simple phone number authentication without building SMS infrastructure"
+verdict_vs_twilio: "Choose Firebase Auth only for phone authentication in Firebase or Google Cloud apps, not as a general SMS solution"

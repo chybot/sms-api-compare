@@ -1,0 +1,280 @@
+---
+interface ProviderData {
+  name: string;
+  slug: string;
+  pricing?: {
+    outbound_sms?: number;
+    inbound_sms?: number;
+    local_number?: number;
+    toll_free_number?: number;
+    verify?: number;
+  };
+  features?: Record<string, boolean>;
+  compliance?: Record<string, boolean>;
+  performance?: {
+    sla?: string;
+    coverage?: string;
+  };
+}
+
+interface Props {
+  providerA: ProviderData;
+  providerB: ProviderData;
+}
+
+const { providerA, providerB } = Astro.props;
+
+const pricingRows = [
+  { label: 'Outbound SMS', key: 'outbound_sms', format: 'price' },
+  { label: 'Inbound SMS', key: 'inbound_sms', format: 'price' },
+  { label: 'Local Number', key: 'local_number', format: 'monthly' },
+  { label: 'Toll-Free Number', key: 'toll_free_number', format: 'monthly' },
+  { label: 'Verify / OTP', key: 'verify', format: 'price' },
+] as const;
+
+const featureKeys = [
+  { key: 'sms', label: 'SMS' },
+  { key: 'voice', label: 'Voice' },
+  { key: 'whatsapp', label: 'WhatsApp' },
+  { key: 'email', label: 'Email' },
+  { key: 'verify', label: 'Verify / OTP' },
+  { key: 'number_lookup', label: 'Number Lookup' },
+  { key: 'short_codes', label: 'Short Codes' },
+  { key: 'mms', label: 'MMS' },
+];
+
+const complianceKeys = [
+  { key: 'hipaa', label: 'HIPAA' },
+  { key: 'soc2', label: 'SOC 2' },
+  { key: 'pci_dss', label: 'PCI DSS' },
+  { key: 'gdpr', label: 'GDPR' },
+];
+
+function formatPrice(value: number | undefined, format: string): string {
+  if (value === undefined || value === null) return 'N/A';
+  if (format === 'price') return `$${value.toFixed(4)}`;
+  if (format === 'monthly') return `$${value.toFixed(2)}/mo`;
+  return String(value);
+}
+
+function getPricingValue(provider: ProviderData, key: string): number | undefined {
+  return (provider.pricing as Record<string, number | undefined>)?.[key];
+}
+
+function isCheaper(valA: number | undefined, valB: number | undefined): 'a' | 'b' | 'tie' {
+  if (valA === undefined && valB === undefined) return 'tie';
+  if (valA === undefined) return 'b';
+  if (valB === undefined) return 'a';
+  if (valA < valB) return 'a';
+  if (valB < valA) return 'b';
+  return 'tie';
+}
+
+function getFeature(provider: ProviderData, key: string): boolean {
+  return provider.features?.[key] ?? false;
+}
+
+function getCompliance(provider: ProviderData, key: string): boolean {
+  return provider.compliance?.[key] ?? false;
+}
+---
+
+<div class="space-y-10">
+  <!-- Pricing Section -->
+  <section>
+    <h3 class="text-xl font-bold text-gray-900 mb-4">Pricing Comparison</h3>
+
+    <!-- Desktop Table -->
+    <div class="hidden sm:block overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-surface-dark">
+            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600 border-b border-border w-1/3">Feature</th>
+            <th class="text-center py-3 px-4 text-sm font-semibold text-gray-600 border-b border-border w-1/3">{providerA.name}</th>
+            <th class="text-center py-3 px-4 text-sm font-semibold text-gray-600 border-b border-border w-1/3">{providerB.name}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pricingRows.map(({ label, key, format }) => {
+            const valA = getPricingValue(providerA, key);
+            const valB = getPricingValue(providerB, key);
+            const winner = isCheaper(valA, valB);
+            return (
+              <tr class="border-b border-border">
+                <td class="py-3 px-4 text-sm font-medium text-gray-700">{label}</td>
+                <td class:list={['text-center py-3 px-4 text-sm', winner === 'a' ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-900']}>
+                  {formatPrice(valA, format)}
+                </td>
+                <td class:list={['text-center py-3 px-4 text-sm', winner === 'b' ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-900']}>
+                  {formatPrice(valB, format)}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div class="sm:hidden space-y-3">
+      {pricingRows.map(({ label, key, format }) => {
+        const valA = getPricingValue(providerA, key);
+        const valB = getPricingValue(providerB, key);
+        const winner = isCheaper(valA, valB);
+        return (
+          <div class="bg-white border border-border rounded-lg p-4">
+            <div class="text-xs font-semibold text-gray-500 uppercase mb-2">{label}</div>
+            <div class="grid grid-cols-2 gap-3">
+              <div class:list={['text-center p-2 rounded-lg', winner === 'a' ? 'bg-green-50' : 'bg-surface']}>
+                <div class="text-xs text-gray-500 mb-1">{providerA.name}</div>
+                <div class:list={['text-sm font-semibold', winner === 'a' ? 'text-green-700' : 'text-gray-900']}>
+                  {formatPrice(valA, format)}
+                </div>
+              </div>
+              <div class:list={['text-center p-2 rounded-lg', winner === 'b' ? 'bg-green-50' : 'bg-surface']}>
+                <div class="text-xs text-gray-500 mb-1">{providerB.name}</div>
+                <div class:list={['text-sm font-semibold', winner === 'b' ? 'text-green-700' : 'text-gray-900']}>
+                  {formatPrice(valB, format)}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section>
+    <h3 class="text-xl font-bold text-gray-900 mb-4">Feature Comparison</h3>
+    <div class="hidden sm:block overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-surface-dark">
+            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600 border-b border-border w-1/3">Feature</th>
+            <th class="text-center py-3 px-4 text-sm font-semibold text-gray-600 border-b border-border w-1/3">{providerA.name}</th>
+            <th class="text-center py-3 px-4 text-sm font-semibold text-gray-600 border-b border-border w-1/3">{providerB.name}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {featureKeys.map(({ key, label }) => {
+            const a = getFeature(providerA, key);
+            const b = getFeature(providerB, key);
+            return (
+              <tr class="border-b border-border">
+                <td class="py-3 px-4 text-sm font-medium text-gray-700">{label}</td>
+                <td class="text-center py-3 px-4 text-lg">
+                  {a ? <span class="text-green-600">&#10003;</span> : <span class="text-red-400">&#10007;</span>}
+                </td>
+                <td class="text-center py-3 px-4 text-lg">
+                  {b ? <span class="text-green-600">&#10003;</span> : <span class="text-red-400">&#10007;</span>}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile -->
+    <div class="sm:hidden space-y-3">
+      {featureKeys.map(({ key, label }) => {
+        const a = getFeature(providerA, key);
+        const b = getFeature(providerB, key);
+        return (
+          <div class="bg-white border border-border rounded-lg p-4">
+            <div class="text-xs font-semibold text-gray-500 uppercase mb-2">{label}</div>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="text-center p-2 rounded-lg bg-surface">
+                <div class="text-xs text-gray-500 mb-1">{providerA.name}</div>
+                <div class="text-lg">{a ? <span class="text-green-600">&#10003;</span> : <span class="text-red-400">&#10007;</span>}</div>
+              </div>
+              <div class="text-center p-2 rounded-lg bg-surface">
+                <div class="text-xs text-gray-500 mb-1">{providerB.name}</div>
+                <div class="text-lg">{b ? <span class="text-green-600">&#10003;</span> : <span class="text-red-400">&#10007;</span>}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- Compliance Section -->
+  <section>
+    <h3 class="text-xl font-bold text-gray-900 mb-4">Compliance</h3>
+    <div class="hidden sm:block overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-surface-dark">
+            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600 border-b border-border w-1/3">Standard</th>
+            <th class="text-center py-3 px-4 text-sm font-semibold text-gray-600 border-b border-border w-1/3">{providerA.name}</th>
+            <th class="text-center py-3 px-4 text-sm font-semibold text-gray-600 border-b border-border w-1/3">{providerB.name}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {complianceKeys.map(({ key, label }) => {
+            const a = getCompliance(providerA, key);
+            const b = getCompliance(providerB, key);
+            return (
+              <tr class="border-b border-border">
+                <td class="py-3 px-4 text-sm font-medium text-gray-700">{label}</td>
+                <td class="text-center py-3 px-4 text-lg">
+                  {a ? <span class="text-green-600">&#10003;</span> : <span class="text-red-400">&#10007;</span>}
+                </td>
+                <td class="text-center py-3 px-4 text-lg">
+                  {b ? <span class="text-green-600">&#10003;</span> : <span class="text-red-400">&#10007;</span>}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile -->
+    <div class="sm:hidden space-y-3">
+      {complianceKeys.map(({ key, label }) => {
+        const a = getCompliance(providerA, key);
+        const b = getCompliance(providerB, key);
+        return (
+          <div class="bg-white border border-border rounded-lg p-4">
+            <div class="text-xs font-semibold text-gray-500 uppercase mb-2">{label}</div>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="text-center p-2 rounded-lg bg-surface">
+                <div class="text-xs text-gray-500 mb-1">{providerA.name}</div>
+                <div class="text-lg">{a ? <span class="text-green-600">&#10003;</span> : <span class="text-red-400">&#10007;</span>}</div>
+              </div>
+              <div class="text-center p-2 rounded-lg bg-surface">
+                <div class="text-xs text-gray-500 mb-1">{providerB.name}</div>
+                <div class="text-lg">{b ? <span class="text-green-600">&#10003;</span> : <span class="text-red-400">&#10007;</span>}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- Performance Section -->
+  <section>
+    <h3 class="text-xl font-bold text-gray-900 mb-4">Performance</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {[providerA, providerB].map((provider) => (
+        <div class="bg-white border border-border rounded-lg p-5">
+          <h4 class="font-semibold text-gray-900 mb-3">{provider.name}</h4>
+          <dl class="space-y-2">
+            <div class="flex justify-between">
+              <dt class="text-sm text-gray-500">SLA</dt>
+              <dd class="text-sm font-medium text-gray-900">{provider.performance?.sla ?? 'N/A'}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-sm text-gray-500">Coverage</dt>
+              <dd class="text-sm font-medium text-gray-900">{provider.performance?.coverage ?? 'N/A'}</dd>
+            </div>
+          </dl>
+        </div>
+      ))}
+    </div>
+  </section>
+</div>

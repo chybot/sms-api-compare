@@ -1,0 +1,26 @@
+---
+interface Props {
+  verdict: string;
+  winnerName: string;
+  variant: 'cost' | 'features' | 'overall';
+}
+
+const { verdict, winnerName, variant } = Astro.props;
+
+const variantClasses: Record<string, string> = {
+  cost: 'bg-green-50 border-green-200 text-green-800',
+  features: 'bg-blue-50 border-blue-200 text-blue-800',
+  overall: 'bg-purple-50 border-purple-200 text-purple-800',
+};
+
+const variantIcons: Record<string, string> = {
+  cost: '$',
+  features: '*',
+  overall: '#',
+};
+---
+
+<div class:list={['inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-semibold', variantClasses[variant]]}>
+  <span class="text-base" aria-hidden="true">&#127942;</span>
+  <span>{winnerName}: {verdict}</span>
+</div>

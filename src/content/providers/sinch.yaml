@@ -1,0 +1,53 @@
+slug: sinch
+name: Sinch
+tagline: "Global messaging giant with true omnichannel reach across SMS, WhatsApp, and email via Mailgun"
+founded: 2008
+hq: "Stockholm, Sweden"
+website: https://www.sinch.com
+
+pricing:
+  sms_outbound_us: 0.00645
+  sms_inbound_us: 0.00645
+  phone_number_local: 1.00
+  phone_number_tollfree: 2.00
+  verify_per_auth: 0.05
+  volume_discount: "enterprise pricing available"
+  free_trial: true
+  free_credits: 0.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: true
+  email: true
+  verify_otp: true
+  number_lookup: true
+  short_code: true
+  10dlc: true
+  flow_builder: "Conversation API"
+  sdk_languages: ["python", "node", "java", "ios", "android"]
+
+compliance:
+  hipaa: false
+  soc2: true
+  pci_dss: false
+  gdpr: true
+
+performance:
+  sla: "99.95%"
+  global_coverage: "220+ countries"
+
+pros:
+  - "True omnichannel platform spanning SMS, WhatsApp, and email via Mailgun"
+  - "Massive global reach across 220+ countries"
+  - "Conversation API unifies all messaging channels"
+  - "Strong presence in APAC and EMEA markets"
+
+cons:
+  - "Complex product portfolio from multiple acquisitions"
+  - "Pricing not transparent, requires sales contact"
+  - "Integration complexity across acquired products"
+  - "Documentation scattered across legacy acquisitions"
+
+best_for: "Global enterprises needing unified omnichannel messaging across SMS, WhatsApp, and email"
+verdict_vs_twilio: "Choose Sinch for true global omnichannel reach including email via Mailgun and strong APAC/EMEA presence"

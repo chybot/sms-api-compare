@@ -1,0 +1,53 @@
+slug: bandwidth
+name: Bandwidth
+tagline: "Tier-1 carrier with its own nationwide network powering carrier-direct communications"
+founded: 1999
+hq: "Raleigh, North Carolina"
+website: https://www.bandwidth.com
+
+pricing:
+  sms_outbound_us: 0.00400
+  sms_inbound_us: 0.00400
+  phone_number_local: 0.50
+  phone_number_tollfree: 1.00
+  verify_per_auth: null
+  volume_discount: "carrier-direct pricing"
+  free_trial: true
+  free_credits: 0.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: false
+  email: false
+  verify_otp: false
+  number_lookup: true
+  short_code: true
+  10dlc: true
+  flow_builder: null
+  sdk_languages: ["python", "node", "java", "ruby", "php", "csharp"]
+
+compliance:
+  hipaa: true
+  soc2: true
+  pci_dss: false
+  gdpr: true
+
+performance:
+  sla: "99.99%"
+  global_coverage: "US and Canada"
+
+pros:
+  - "Owns its own network infrastructure as a Tier-1 carrier"
+  - "Lowest carrier-direct pricing without middleman markup"
+  - "Powers other CPaaS providers behind the scenes"
+  - "Excellent reliability for US-focused messaging"
+
+cons:
+  - "Limited international coverage beyond US and Canada"
+  - "No built-in verify or OTP API"
+  - "Less developer-friendly than pure CPaaS competitors"
+  - "US-centric with minimal global presence"
+
+best_for: "High-volume US-focused messaging operations that need carrier-direct pricing without a middleman"
+verdict_vs_twilio: "Choose Bandwidth if you are US-only and want carrier-direct pricing without the middleman markup"

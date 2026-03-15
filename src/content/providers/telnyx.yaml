@@ -1,0 +1,52 @@
+slug: telnyx
+name: Telnyx
+tagline: "Developer-focused communications platform with a private global IP network for superior quality"
+founded: 2009
+hq: "Chicago, Illinois"
+website: https://www.telnyx.com
+
+pricing:
+  sms_outbound_us: 0.00400
+  sms_inbound_us: 0.00400
+  phone_number_local: 1.00
+  phone_number_tollfree: 2.00
+  verify_per_auth: 0.03
+  volume_discount: "30-70% at scale"
+  free_trial: true
+  free_credits: 10.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: false
+  email: false
+  verify_otp: true
+  number_lookup: true
+  short_code: true
+  10dlc: true
+  flow_builder: "TeXML"
+  sdk_languages: ["python", "node", "java", "ruby", "php", "dotnet"]
+
+compliance:
+  hipaa: true
+  soc2: true
+  pci_dss: false
+  gdpr: true
+
+performance:
+  sla: "99.999%"
+  global_coverage: "50+ countries"
+
+pros:
+  - "Private IP network ensures superior call and message quality"
+  - "Very competitive pricing across SMS and voice"
+  - "Excellent uptime SLA at 99.999% (five nines)"
+  - "Great developer experience with clean API design"
+
+cons:
+  - "Smaller global coverage compared to Twilio or Sinch"
+  - "Newer entrant with less brand recognition"
+  - "Smaller community and fewer third-party integrations"
+
+best_for: "Developers wanting the best quality-to-price ratio with the reliability of a private network"
+verdict_vs_twilio: "Choose Telnyx for best quality-to-price ratio with private network advantage and five-nines uptime"

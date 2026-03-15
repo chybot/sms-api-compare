@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllProviders } from '../data/providers';
+
+const providers = getAllProviders();
+
+const p0Pairs = [
+  { a: 'twilio', b: 'plivo' },
+  { a: 'twilio', b: 'vonage' },
+  { a: 'twilio', b: 'messagebird' },
+  { a: 'twilio', b: 'sinch' },
+  { a: 'twilio', b: 'clicksend' },
+  { a: 'twilio', b: 'bandwidth' },
+  { a: 'twilio', b: 'ringcentral' },
+  { a: 'twilio', b: 'infobip' },
+  { a: 'twilio', b: 'aws-sns' },
+  { a: 'twilio', b: 'firebase-auth' },
+];
+
+const popularComparisons = p0Pairs.map(pair => {
+  const provA = providers.find(p => p.slug === pair.a);
+  const provB = providers.find(p => p.slug === pair.b);
+  return {
+    slug: `${pair.a}-vs-${pair.b}`,
+    nameA: provA?.name ?? pair.a,
+    nameB: provB?.name ?? pair.b,
+  };
+});
+
+const alternativeProviders = ['twilio', 'plivo', 'vonage', 'telnyx', 'bandwidth', 'sinch'];
+
+const title = 'SMS API Comparison 2026: Twilio vs Plivo vs Vonage & More';
+const description = 'Compare SMS API providers side by side. Independent, unbiased comparisons of pricing, features, compliance, and developer experience for Twilio, Plivo, Vonage, and more.';
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- Hero -->
+  <section class="bg-gradient-to-b from-surface to-white py-16 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight">
+        Compare SMS API Providers
+      </h1>
+      <p class="mt-6 text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+        Find the best SMS API for your business. Independent, unbiased comparisons of pricing, features, and developer experience.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/compare/twilio-vs-plivo" class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary-dark transition-colors">
+          Top Comparison: Twilio vs Plivo
+        </a>
+        <a href="/tools/pricing-calculator" class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white border border-border text-gray-700 font-semibold hover:bg-surface transition-colors">
+          Pricing Calculator
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Comparisons -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-gray-900 text-center mb-4">Popular Comparisons</h2>
+      <p class="text-gray-500 text-center mb-10 max-w-2xl mx-auto">
+        Head-to-head comparisons of the most popular SMS API providers, covering pricing, features, compliance, and code examples.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {popularComparisons.map(comp => (
+          <a
+            href={`/compare/${comp.slug}`}
+            class="group block bg-white rounded-xl border border-border p-6 hover:shadow-lg hover:border-primary/30 transition-all"
+          >
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-10 h-10 rounded-lg bg-primary/10 text-primary font-bold flex items-center justify-center text-sm">
+                {comp.nameA.charAt(0)}
+              </span>
+              <span class="text-gray-400 font-bold text-sm">VS</span>
+              <span class="w-10 h-10 rounded-lg bg-secondary/10 text-secondary font-bold flex items-center justify-center text-sm">
+                {comp.nameB.charAt(0)}
+              </span>
+            </div>
+            <h3 class="font-semibold text-gray-900 group-hover:text-primary transition-colors">
+              {comp.nameA} vs {comp.nameB}
+            </h3>
+            <p class="text-sm text-gray-500 mt-1">Pricing, features & API compared</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- All Providers -->
+  <section class="py-16 bg-surface">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-gray-900 text-center mb-4">All Providers</h2>
+      <p class="text-gray-500 text-center mb-10 max-w-2xl mx-auto">
+        Explore individual reviews and pricing details for each SMS API provider.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {providers.map(provider => (
+          <a
+            href={`/reviews/${provider.slug}`}
+            class="group block bg-white rounded-xl border border-border p-6 hover:shadow-lg hover:border-primary/30 transition-all"
+          >
+            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary font-bold flex items-center justify-center text-lg mb-4">
+              {provider.name.charAt(0)}
+            </div>
+            <h3 class="font-semibold text-gray-900 group-hover:text-primary transition-colors">{provider.name}</h3>
+            <p class="text-sm text-gray-500 mt-1 line-clamp-2">{provider.tagline}</p>
+            <div class="mt-4 flex items-center gap-4 text-xs text-gray-400">
+              {provider.pricing.sms_outbound_us !== null && (
+                <span>SMS: ${provider.pricing.sms_outbound_us.toFixed(4)}</span>
+              )}
+              <span>Founded {provider.founded}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools -->
+  <section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Tools</h2>
+      <p class="text-gray-500 mb-8 max-w-2xl mx-auto">
+        Use our free tools to estimate costs and find the right provider.
+      </p>
+      <a
+        href="/tools/pricing-calculator"
+        class="inline-flex items-center gap-3 bg-white rounded-xl border border-border p-6 hover:shadow-lg hover:border-primary/30 transition-all"
+      >
+        <svg class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        <div class="text-left">
+          <h3 class="font-semibold text-gray-900">SMS Pricing Calculator</h3>
+          <p class="text-sm text-gray-500">Estimate monthly costs across all providers</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Alternatives -->
+  <section id="alternatives" class="py-16 bg-surface">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-gray-900 text-center mb-4">Provider Alternatives</h2>
+      <p class="text-gray-500 text-center mb-10 max-w-2xl mx-auto">
+        Looking for alternatives to a specific provider? Check out our curated lists.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {alternativeProviders.map(slug => {
+          const prov = providers.find(p => p.slug === slug);
+          return (
+            <a
+              href={`/${slug}-alternatives`}
+              class="group block bg-white rounded-xl border border-border p-6 hover:shadow-lg hover:border-primary/30 transition-all"
+            >
+              <h3 class="font-semibold text-gray-900 group-hover:text-primary transition-colors">
+                Top {prov?.name ?? slug} Alternatives
+              </h3>
+              <p class="text-sm text-gray-500 mt-1">Best alternatives to {prov?.name ?? slug} in 2026</p>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

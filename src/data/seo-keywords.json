@@ -1,0 +1,268 @@
+[
+  {
+    "keyword": "twilio vs plivo",
+    "vol": 70,
+    "kd": 12,
+    "cpc": 17.53,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-plivo",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs vonage",
+    "vol": 110,
+    "kd": 14,
+    "cpc": 22.69,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-vonage",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs messagebird",
+    "vol": 170,
+    "kd": 6,
+    "cpc": 17.15,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-messagebird",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs sinch",
+    "vol": 40,
+    "kd": 10,
+    "cpc": 10.46,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-sinch",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs clicksend",
+    "vol": 50,
+    "kd": 1,
+    "cpc": 14.36,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-clicksend",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs bandwidth",
+    "vol": 30,
+    "kd": 9,
+    "cpc": 16.12,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-bandwidth",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs ringcentral",
+    "vol": 30,
+    "kd": 6,
+    "cpc": 62.1,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-ringcentral",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs infobip",
+    "vol": 20,
+    "kd": null,
+    "cpc": 14.69,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-infobip",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs nexmo",
+    "vol": 40,
+    "kd": null,
+    "cpc": null,
+    "page_type": "redirect to twilio-vs-vonage (Nexmo=Vonage)",
+    "serp_overlap_group": "twilio-vonage",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs aws sns",
+    "vol": 20,
+    "kd": null,
+    "cpc": null,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-aws",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio vs firebase",
+    "vol": 20,
+    "kd": null,
+    "cpc": null,
+    "page_type": "head-to-head comparison",
+    "serp_overlap_group": "twilio-firebase",
+    "priority": "P0_must_do"
+  },
+  {
+    "keyword": "twilio alternatives",
+    "vol": 880,
+    "kd": 16,
+    "cpc": 14.69,
+    "page_type": "listicle (Top 10 Twilio Alternatives)",
+    "note": "borderline KD but huge value",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "twilio competitors",
+    "vol": 590,
+    "kd": 17,
+    "cpc": 17.16,
+    "page_type": "same page as alternatives",
+    "serp_overlap_group": "twilio-alternatives",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "a2p sms provider",
+    "vol": 70,
+    "kd": 11,
+    "cpc": 32.64,
+    "page_type": "guide/listicle",
+    "note": "highest CPC in actionable set",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "telnyx alternatives",
+    "vol": 40,
+    "kd": 6,
+    "cpc": 26.4,
+    "page_type": "listicle",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "plivo alternatives",
+    "vol": 20,
+    "kd": null,
+    "cpc": 26.22,
+    "page_type": "listicle",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "vonage alternatives",
+    "vol": 260,
+    "kd": 18,
+    "cpc": 38.5,
+    "page_type": "listicle",
+    "note": "borderline KD but high vol+CPC",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "best cpaas provider",
+    "vol": 30,
+    "kd": null,
+    "cpc": 17.32,
+    "page_type": "guide",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "sms api comparison for businesses",
+    "vol": 140,
+    "kd": 9,
+    "cpc": null,
+    "page_type": "comprehensive comparison table",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "twilio alternative free",
+    "vol": 40,
+    "kd": 15,
+    "cpc": 5.92,
+    "page_type": "section in alternatives page",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "twilio alternative reddit",
+    "vol": 20,
+    "kd": null,
+    "cpc": 9.76,
+    "page_type": "roundup from Reddit discussions",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "best sms otp provider",
+    "vol": 20,
+    "kd": null,
+    "cpc": null,
+    "page_type": "OTP-focused comparison",
+    "priority": "P1_high_value"
+  },
+  {
+    "keyword": "what is sms api",
+    "vol": 110,
+    "kd": 12,
+    "page_type": "educational guide",
+    "priority": "P2_content_depth"
+  },
+  {
+    "keyword": "plivo review",
+    "vol": 20,
+    "kd": null,
+    "cpc": 18.5,
+    "page_type": "individual review",
+    "priority": "P2_content_depth"
+  },
+  {
+    "keyword": "telnyx review",
+    "vol": 20,
+    "kd": null,
+    "cpc": 32.69,
+    "page_type": "individual review",
+    "priority": "P2_content_depth"
+  },
+  {
+    "keyword": "sms api pricing comparison",
+    "vol": 20,
+    "kd": null,
+    "page_type": "pricing table/calculator",
+    "priority": "P2_content_depth"
+  },
+  {
+    "keyword": "otp verification api",
+    "vol": 30,
+    "kd": null,
+    "cpc": 9.05,
+    "page_type": "educational guide",
+    "priority": "P2_content_depth"
+  },
+  {
+    "keyword": "alternative to sms otp",
+    "vol": 20,
+    "kd": null,
+    "page_type": "guide",
+    "priority": "P2_content_depth"
+  },
+  {
+    "keyword": "cheapest sms api provider",
+    "vol": 30,
+    "kd": null,
+    "page_type": "cost-focused comparison",
+    "priority": "P2_content_depth"
+  },
+  {
+    "keyword": "sms api for developers",
+    "vol": 50,
+    "kd": null,
+    "cpc": 11.25,
+    "page_type": "DX-focused comparison",
+    "priority": "P2_content_depth"
+  },
+  {
+    "keyword": "best sms api",
+    "vol": null,
+    "kd": null,
+    "page_type": "hub/pillar page",
+    "priority": "P2_content_depth"
+  },
+  {
+    "keyword": "number verification api",
+    "vol": 20,
+    "kd": null,
+    "cpc": 7.22,
+    "page_type": "guide",
+    "priority": "P2_content_depth"
+  }
+]

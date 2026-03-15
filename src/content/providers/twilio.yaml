@@ -1,0 +1,53 @@
+slug: twilio
+name: Twilio
+tagline: "The market-leading cloud communications platform powering omnichannel messaging at scale"
+founded: 2008
+hq: "San Francisco, California"
+website: https://www.twilio.com
+
+pricing:
+  sms_outbound_us: 0.00790
+  sms_inbound_us: 0.00750
+  phone_number_local: 1.15
+  phone_number_tollfree: 2.15
+  verify_per_auth: 0.05
+  volume_discount: "committed use discounts available"
+  free_trial: true
+  free_credits: 15.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: true
+  email: true
+  verify_otp: true
+  number_lookup: true
+  short_code: true
+  10dlc: true
+  flow_builder: "Studio"
+  sdk_languages: ["python", "node", "java", "ruby", "php", "go", "csharp"]
+
+compliance:
+  hipaa: true
+  soc2: true
+  pci_dss: "Level 1"
+  gdpr: true
+
+performance:
+  sla: "99.95%"
+  global_coverage: "180+ countries"
+
+pros:
+  - "Largest ecosystem and developer community in CPaaS"
+  - "Best-in-class documentation and tutorials"
+  - "Most third-party integrations of any provider"
+  - "True omnichannel: SMS, voice, WhatsApp, email (SendGrid), video"
+
+cons:
+  - "Most expensive per-message pricing among major providers"
+  - "Complex pricing structure with many line items"
+  - "Costs can escalate quickly at scale"
+  - "Vendor lock-in risk due to proprietary APIs"
+
+best_for: "Enterprises needing omnichannel communications with the maximum ecosystem, integrations, and developer resources"
+verdict_vs_twilio: null

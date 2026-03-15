@@ -1,0 +1,53 @@
+---
+interface Provider {
+  name: string;
+  slug: string;
+  pros?: string[];
+  cons?: string[];
+}
+
+interface Props {
+  providerA: Provider;
+  providerB: Provider;
+}
+
+const { providerA, providerB } = Astro.props;
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  {[providerA, providerB].map((provider) => (
+    <div class="bg-white border border-border rounded-xl p-6">
+      <h3 class="text-lg font-bold text-gray-900 mb-5">{provider.name}</h3>
+
+      <!-- Pros -->
+      {provider.pros && provider.pros.length > 0 && (
+        <div class="mb-5">
+          <h4 class="text-sm font-semibold text-green-700 uppercase tracking-wider mb-3">Pros</h4>
+          <ul class="space-y-2">
+            {provider.pros.map((pro) => (
+              <li class="flex items-start gap-2">
+                <span class="text-green-600 mt-0.5 flex-shrink-0">&#10003;</span>
+                <span class="text-sm text-gray-700">{pro}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Cons -->
+      {provider.cons && provider.cons.length > 0 && (
+        <div>
+          <h4 class="text-sm font-semibold text-red-600 uppercase tracking-wider mb-3">Cons</h4>
+          <ul class="space-y-2">
+            {provider.cons.map((con) => (
+              <li class="flex items-start gap-2">
+                <span class="text-red-400 mt-0.5 flex-shrink-0">&#10007;</span>
+                <span class="text-sm text-gray-700">{con}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  ))}
+</div>

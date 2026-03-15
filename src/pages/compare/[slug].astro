@@ -1,0 +1,430 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import { getAllProviders, getComparisonPairs } from '../../data/providers';
+import type { Provider } from '../../data/providers';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const pairs = getComparisonPairs();
+  const providers = getAllProviders();
+  return pairs.map(pair => {
+    const a = providers.find(p => p.slug === pair.slugA)!;
+    const b = providers.find(p => p.slug === pair.slugB)!;
+    return {
+      params: { slug: pair.slug },
+      props: { providerA: a, providerB: b },
+    };
+  });
+};
+
+interface Props {
+  providerA: Provider;
+  providerB: Provider;
+}
+
+const { providerA, providerB } = Astro.props;
+const a = providerA;
+const b = providerB;
+
+const title = `${a.name} vs ${b.name} (2026): Pricing, Features & API Compared`;
+const description = `Detailed comparison of ${a.name} and ${b.name}. Compare SMS pricing, features, compliance, and developer experience to find the best SMS API for your needs.`;
+
+// Determine pricing winner
+const pricingWinner = (() => {
+  if (a.pricing.sms_outbound_us === null && b.pricing.sms_outbound_us === null) return null;
+  if (a.pricing.sms_outbound_us === null) return b.name;
+  if (b.pricing.sms_outbound_us === null) return a.name;
+  return a.pricing.sms_outbound_us < b.pricing.sms_outbound_us ? a.name : b.name;
+})();
+
+const featureCountA = [a.features.sms, a.features.voice, a.features.whatsapp, a.features.email, a.features.verify_otp, a.features.number_lookup, a.features.short_code, a.features['10dlc']].filter(Boolean).length;
+const featureCountB = [b.features.sms, b.features.voice, b.features.whatsapp, b.features.email, b.features.verify_otp, b.features.number_lookup, b.features.short_code, b.features['10dlc']].filter(Boolean).length;
+const featureWinner = featureCountA > featureCountB ? a.name : featureCountB > featureCountA ? b.name : 'Tie';
+
+// Related comparisons
+const allProviders = getAllProviders();
+const allPairs = getComparisonPairs();
+const relatedComparisons = allPairs
+  .filter(p => p.slug !== `${a.slug}-vs-${b.slug}` && (p.slugA === a.slug || p.slugB === a.slug || p.slugA === b.slug || p.slugB === b.slug))
+  .slice(0, 6)
+  .map(p => {
+    const pA = allProviders.find(pr => pr.slug === p.slugA)!;
+    const pB = allProviders.find(pr => pr.slug === p.slugB)!;
+    return { slug: p.slug, nameA: pA.name, nameB: pB.name };
+  });
+
+// FAQ data
+const faqs = [
+  {
+    question: `Is ${a.name} cheaper than ${b.name}?`,
+    answer: a.pricing.sms_outbound_us !== null && b.pricing.sms_outbound_us !== null
+      ? `${a.name} charges $${a.pricing.sms_outbound_us.toFixed(4)} per outbound SMS in the US, while ${b.name} charges $${b.pricing.sms_outbound_us.toFixed(4)}. ${pricingWinner} is the cheaper option for outbound SMS. However, total costs depend on volume, inbound messages, phone number fees, and available discounts.`
+      : `These providers have different pricing models that make direct comparison nuanced. Check their respective pricing pages for detailed rates.`,
+  },
+  {
+    question: `Which has better developer experience, ${a.name} or ${b.name}?`,
+    answer: `${a.name} supports SDKs in ${a.features.sdk_languages.join(', ')}, while ${b.name} offers ${b.features.sdk_languages.join(', ')}. Both provide REST APIs. Consider the languages your team uses and the quality of documentation when deciding.`,
+  },
+  {
+    question: `Which is better for OTP and verification?`,
+    answer: `${a.features.verify_otp ? `${a.name} offers OTP/verification` : `${a.name} does not offer built-in verification`}. ${b.features.verify_otp ? `${b.name} offers OTP/verification` : `${b.name} does not offer built-in verification`}. ${a.features.verify_otp && b.features.verify_otp && a.pricing.verify_per_auth != null && b.pricing.verify_per_auth != null ? `${a.name} charges $${a.pricing.verify_per_auth.toFixed(2)} per verification, while ${b.name} charges $${b.pricing.verify_per_auth.toFixed(2)}.` : ''}`,
+  },
+  {
+    question: `Can I migrate from ${a.name} to ${b.name}?`,
+    answer: `Yes, migration between SMS API providers is generally straightforward. You will need to update your API integration code, port any phone numbers (most providers support number porting), and update webhook endpoints. Most migrations can be completed in a few days to a couple of weeks depending on complexity.`,
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(faq => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+};
+
+const formatPrice = (price: number | null) => price !== null ? `$${price.toFixed(4)}` : 'N/A';
+const formatPriceDollars = (price: number | null) => price !== null ? `$${price.toFixed(2)}` : 'N/A';
+const check = (val: boolean) => val ? '\u2705' : '\u274C';
+---
+
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-sm text-gray-500">
+        <li><a href="/" class="hover:text-primary transition-colors">Home</a></li>
+        <li class="before:content-['/'] before:mx-2 before:text-gray-300">
+          <a href="/" class="hover:text-primary transition-colors">Compare</a>
+        </li>
+        <li class="before:content-['/'] before:mx-2 before:text-gray-300">
+          <span class="text-gray-900 font-medium">{a.name} vs {b.name}</span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="bg-surface rounded-2xl border border-border p-8 mb-10">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+        <div class="text-center">
+          <div class="w-16 h-16 rounded-xl bg-white border border-border flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-primary">
+            {a.name.charAt(0)}
+          </div>
+          <h2 class="text-xl font-bold text-gray-900">{a.name}</h2>
+        </div>
+        <div class="flex-shrink-0">
+          <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary text-white text-lg font-extrabold shadow-lg">VS</span>
+        </div>
+        <div class="text-center">
+          <div class="w-16 h-16 rounded-xl bg-white border border-border flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-primary">
+            {b.name.charAt(0)}
+          </div>
+          <h2 class="text-xl font-bold text-gray-900">{b.name}</h2>
+        </div>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-center mt-6 text-gray-900">
+        {a.name} vs {b.name}: Complete Comparison (2026)
+      </h1>
+      <p class="text-center text-gray-500 mt-2 max-w-2xl mx-auto">{description}</p>
+    </div>
+
+    <!-- Quick Verdict -->
+    <div class="bg-primary/5 border border-primary/20 rounded-xl p-6 mb-10">
+      <h2 class="text-lg font-bold text-primary mb-2">Quick Verdict</h2>
+      {b.verdict_vs_twilio && a.slug === 'twilio' ? (
+        <p class="text-gray-700">{b.verdict_vs_twilio}</p>
+      ) : a.verdict_vs_twilio && b.slug === 'twilio' ? (
+        <p class="text-gray-700">{a.verdict_vs_twilio}</p>
+      ) : (
+        <p class="text-gray-700">
+          {pricingWinner ? `${pricingWinner} wins on pricing.` : ''} {featureWinner !== 'Tie' ? `${featureWinner} offers more features.` : 'Both offer a similar feature set.'} Read the full comparison below to find the best fit for your use case.
+        </p>
+      )}
+      <div class="mt-4 flex flex-wrap gap-3">
+        {pricingWinner && (
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-accent/10 text-accent">
+            Best Price: {pricingWinner}
+          </span>
+        )}
+        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-secondary/10 text-secondary">
+          Most Features: {featureWinner}
+        </span>
+      </div>
+    </div>
+
+    <!-- At a Glance -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">At a Glance</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border border-border rounded-xl overflow-hidden">
+          <thead>
+            <tr class="bg-surface">
+              <th class="text-left p-4 font-semibold text-gray-700">Metric</th>
+              <th class="text-left p-4 font-semibold text-primary">{a.name}</th>
+              <th class="text-left p-4 font-semibold text-secondary">{b.name}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            <tr><td class="p-4 text-gray-600">Founded</td><td class="p-4">{a.founded}</td><td class="p-4">{b.founded}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Headquarters</td><td class="p-4">{a.hq}</td><td class="p-4">{b.hq}</td></tr>
+            <tr><td class="p-4 text-gray-600">Outbound SMS (US)</td><td class="p-4 font-mono">{formatPrice(a.pricing.sms_outbound_us)}</td><td class="p-4 font-mono">{formatPrice(b.pricing.sms_outbound_us)}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Inbound SMS (US)</td><td class="p-4 font-mono">{formatPrice(a.pricing.sms_inbound_us)}</td><td class="p-4 font-mono">{formatPrice(b.pricing.sms_inbound_us)}</td></tr>
+            <tr><td class="p-4 text-gray-600">SLA Uptime</td><td class="p-4">{a.performance.sla}</td><td class="p-4">{b.performance.sla}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Global Coverage</td><td class="p-4">{a.performance.global_coverage}</td><td class="p-4">{b.performance.global_coverage}</td></tr>
+            <tr><td class="p-4 text-gray-600">Free Trial</td><td class="p-4">{a.pricing.free_trial ? 'Yes' : 'No'}</td><td class="p-4">{b.pricing.free_trial ? 'Yes' : 'No'}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Free Credits</td><td class="p-4 font-mono">{formatPriceDollars(a.pricing.free_credits)}</td><td class="p-4 font-mono">{formatPriceDollars(b.pricing.free_credits)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Full Comparison Table -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Pricing Comparison</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border border-border rounded-xl overflow-hidden">
+          <thead>
+            <tr class="bg-surface">
+              <th class="text-left p-4 font-semibold text-gray-700">Pricing Item</th>
+              <th class="text-left p-4 font-semibold text-primary">{a.name}</th>
+              <th class="text-left p-4 font-semibold text-secondary">{b.name}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            <tr><td class="p-4 text-gray-600">Outbound SMS (US)</td><td class="p-4 font-mono">{formatPrice(a.pricing.sms_outbound_us)}</td><td class="p-4 font-mono">{formatPrice(b.pricing.sms_outbound_us)}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Inbound SMS (US)</td><td class="p-4 font-mono">{formatPrice(a.pricing.sms_inbound_us)}</td><td class="p-4 font-mono">{formatPrice(b.pricing.sms_inbound_us)}</td></tr>
+            <tr><td class="p-4 text-gray-600">Local Number</td><td class="p-4 font-mono">{formatPriceDollars(a.pricing.phone_number_local)}/mo</td><td class="p-4 font-mono">{formatPriceDollars(b.pricing.phone_number_local)}/mo</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Toll-Free Number</td><td class="p-4 font-mono">{formatPriceDollars(a.pricing.phone_number_tollfree)}/mo</td><td class="p-4 font-mono">{formatPriceDollars(b.pricing.phone_number_tollfree)}/mo</td></tr>
+            <tr><td class="p-4 text-gray-600">Verify / OTP</td><td class="p-4 font-mono">{formatPriceDollars(a.pricing.verify_per_auth)}/auth</td><td class="p-4 font-mono">{formatPriceDollars(b.pricing.verify_per_auth)}/auth</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Volume Discount</td><td class="p-4">{a.pricing.volume_discount}</td><td class="p-4">{b.pricing.volume_discount}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Feature Comparison -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Feature Comparison</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border border-border rounded-xl overflow-hidden">
+          <thead>
+            <tr class="bg-surface">
+              <th class="text-left p-4 font-semibold text-gray-700">Feature</th>
+              <th class="text-left p-4 font-semibold text-primary">{a.name}</th>
+              <th class="text-left p-4 font-semibold text-secondary">{b.name}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            <tr><td class="p-4 text-gray-600">SMS</td><td class="p-4">{check(a.features.sms)}</td><td class="p-4">{check(b.features.sms)}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Voice</td><td class="p-4">{check(a.features.voice)}</td><td class="p-4">{check(b.features.voice)}</td></tr>
+            <tr><td class="p-4 text-gray-600">WhatsApp</td><td class="p-4">{check(a.features.whatsapp)}</td><td class="p-4">{check(b.features.whatsapp)}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Email</td><td class="p-4">{check(a.features.email)}</td><td class="p-4">{check(b.features.email)}</td></tr>
+            <tr><td class="p-4 text-gray-600">Verify / OTP</td><td class="p-4">{check(a.features.verify_otp)}</td><td class="p-4">{check(b.features.verify_otp)}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">Number Lookup</td><td class="p-4">{check(a.features.number_lookup)}</td><td class="p-4">{check(b.features.number_lookup)}</td></tr>
+            <tr><td class="p-4 text-gray-600">Short Code</td><td class="p-4">{check(a.features.short_code)}</td><td class="p-4">{check(b.features.short_code)}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">10DLC</td><td class="p-4">{check(a.features['10dlc'])}</td><td class="p-4">{check(b.features['10dlc'])}</td></tr>
+            <tr><td class="p-4 text-gray-600">Flow Builder</td><td class="p-4">{a.features.flow_builder ?? 'None'}</td><td class="p-4">{b.features.flow_builder ?? 'None'}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">SDK Languages</td><td class="p-4">{a.features.sdk_languages.join(', ')}</td><td class="p-4">{b.features.sdk_languages.join(', ')}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Compliance Comparison -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Compliance</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border border-border rounded-xl overflow-hidden">
+          <thead>
+            <tr class="bg-surface">
+              <th class="text-left p-4 font-semibold text-gray-700">Standard</th>
+              <th class="text-left p-4 font-semibold text-primary">{a.name}</th>
+              <th class="text-left p-4 font-semibold text-secondary">{b.name}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            <tr><td class="p-4 text-gray-600">HIPAA</td><td class="p-4">{check(a.compliance.hipaa)}</td><td class="p-4">{check(b.compliance.hipaa)}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">SOC 2</td><td class="p-4">{check(a.compliance.soc2)}</td><td class="p-4">{check(b.compliance.soc2)}</td></tr>
+            <tr><td class="p-4 text-gray-600">PCI DSS</td><td class="p-4">{a.compliance.pci_dss || 'No'}</td><td class="p-4">{b.compliance.pci_dss || 'No'}</td></tr>
+            <tr class="bg-surface/50"><td class="p-4 text-gray-600">GDPR</td><td class="p-4">{check(a.compliance.gdpr)}</td><td class="p-4">{check(b.compliance.gdpr)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Pros & Cons -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Pros & Cons</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Provider A -->
+        <div class="bg-white rounded-xl border border-border p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">{a.name}</h3>
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold text-accent uppercase tracking-wider mb-2">Pros</h4>
+            <ul class="space-y-2">
+              {a.pros.map(pro => (
+                <li class="flex items-start gap-2 text-sm text-gray-700">
+                  <span class="text-accent mt-0.5 flex-shrink-0">+</span>
+                  {pro}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold text-red-500 uppercase tracking-wider mb-2">Cons</h4>
+            <ul class="space-y-2">
+              {a.cons.map(con => (
+                <li class="flex items-start gap-2 text-sm text-gray-700">
+                  <span class="text-red-500 mt-0.5 flex-shrink-0">-</span>
+                  {con}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <!-- Provider B -->
+        <div class="bg-white rounded-xl border border-border p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-4">{b.name}</h3>
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold text-accent uppercase tracking-wider mb-2">Pros</h4>
+            <ul class="space-y-2">
+              {b.pros.map(pro => (
+                <li class="flex items-start gap-2 text-sm text-gray-700">
+                  <span class="text-accent mt-0.5 flex-shrink-0">+</span>
+                  {pro}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold text-red-500 uppercase tracking-wider mb-2">Cons</h4>
+            <ul class="space-y-2">
+              {b.cons.map(con => (
+                <li class="flex items-start gap-2 text-sm text-gray-700">
+                  <span class="text-red-500 mt-0.5 flex-shrink-0">-</span>
+                  {con}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Comparison -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Send an SMS: Code Comparison</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-700 mb-3">{a.name} (Node.js)</h3>
+          <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 text-sm overflow-x-auto"><code>{`// ${a.name} - Send SMS
+const client = require('${a.slug}');
+// Initialize with your ${a.name} credentials
+client.messages.create({
+  to: '+1234567890',
+  from: '+1098765432',
+  body: 'Hello from ${a.name}!'
+});`}</code></pre>
+        </div>
+        <div>
+          <h3 class="text-sm font-semibold text-gray-700 mb-3">{b.name} (Node.js)</h3>
+          <pre class="bg-gray-900 text-gray-100 rounded-xl p-4 text-sm overflow-x-auto"><code>{`// ${b.name} - Send SMS
+const client = require('${b.slug}');
+// Initialize with your ${b.name} credentials
+client.messages.create({
+  to: '+1234567890',
+  from: '+1098765432',
+  body: 'Hello from ${b.name}!'
+});`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Who Should Choose -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Which Provider Should You Choose?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-primary/5 border border-primary/20 rounded-xl p-6">
+          <h3 class="text-lg font-bold text-primary mb-3">Choose {a.name} if...</h3>
+          <p class="text-gray-700">{a.best_for}</p>
+        </div>
+        <div class="bg-secondary/5 border border-secondary/20 rounded-xl p-6">
+          <h3 class="text-lg font-bold text-secondary mb-3">Choose {b.name} if...</h3>
+          <p class="text-gray-700">{b.best_for}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+      <div class="space-y-4">
+        {faqs.map(faq => (
+          <details class="group bg-white border border-border rounded-xl">
+            <summary class="cursor-pointer p-5 font-semibold text-gray-900 flex items-center justify-between">
+              {faq.question}
+              <svg class="w-5 h-5 text-gray-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="px-5 pb-5 text-gray-600 text-sm leading-relaxed">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl p-8 text-center text-white">
+        <h2 class="text-2xl font-bold mb-3">Ready to choose your SMS API?</h2>
+        <p class="text-white/80 mb-6 max-w-xl mx-auto">
+          Use our pricing calculator to estimate your monthly costs, or check out individual provider reviews for more details.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/tools/pricing-calculator" class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white text-primary font-semibold hover:bg-gray-100 transition-colors">
+            Pricing Calculator
+          </a>
+          <a href={`/reviews/${a.slug}`} class="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-white/30 text-white font-semibold hover:bg-white/10 transition-colors">
+            {a.name} Review
+          </a>
+          <a href={`/reviews/${b.slug}`} class="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-white/30 text-white font-semibold hover:bg-white/10 transition-colors">
+            {b.name} Review
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Comparisons -->
+    {relatedComparisons.length > 0 && (
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Related Comparisons</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {relatedComparisons.map(comp => (
+            <a
+              href={`/compare/${comp.slug}`}
+              class="group block bg-white rounded-xl border border-border p-4 hover:shadow-md hover:border-primary/30 transition-all"
+            >
+              <h3 class="font-medium text-gray-900 group-hover:text-primary transition-colors text-sm">
+                {comp.nameA} vs {comp.nameB}
+              </h3>
+              <p class="text-xs text-gray-500 mt-1">View comparison</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>

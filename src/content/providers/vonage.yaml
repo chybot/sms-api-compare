@@ -1,0 +1,52 @@
+slug: vonage
+name: Vonage
+tagline: "Enterprise CPaaS platform with industry-leading verify API, formerly Nexmo"
+founded: 2001
+hq: "Holmdel, New Jersey"
+website: https://www.vonage.com
+
+pricing:
+  sms_outbound_us: 0.00680
+  sms_inbound_us: 0.00620
+  phone_number_local: 1.00
+  phone_number_tollfree: 1.75
+  verify_per_auth: 0.053
+  volume_discount: "tiered pricing available"
+  free_trial: true
+  free_credits: 2.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: true
+  email: false
+  verify_otp: true
+  number_lookup: true
+  short_code: true
+  10dlc: true
+  flow_builder: "AI Studio"
+  sdk_languages: ["python", "node", "java", "ruby", "php", "dotnet"]
+
+compliance:
+  hipaa: true
+  soc2: true
+  pci_dss: "Level 1"
+  gdpr: true
+
+performance:
+  sla: "99.99%"
+  global_coverage: "200+ countries"
+
+pros:
+  - "Strong Verify API with silent authentication and fraud detection"
+  - "Good WhatsApp Business API support"
+  - "Enterprise-grade reliability backed by Ericsson"
+  - "Part of Ericsson providing telecom infrastructure depth"
+
+cons:
+  - "Complex pricing tiers can be confusing"
+  - "Dashboard UX feels dated compared to competitors"
+  - "Documentation fragmented after Nexmo-to-Vonage rebrand"
+
+best_for: "Enterprises needing a strong verification API combined with WhatsApp Business integration"
+verdict_vs_twilio: "Choose Vonage for verify API strength and WhatsApp Business integration at a slightly lower price point"

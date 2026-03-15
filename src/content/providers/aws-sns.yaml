@@ -1,0 +1,53 @@
+slug: aws-sns
+name: "AWS SNS"
+tagline: "AWS-native messaging service with pay-per-use pricing and deep cloud integration"
+founded: 2006
+hq: "Seattle, Washington"
+website: https://aws.amazon.com/sns/
+
+pricing:
+  sms_outbound_us: 0.00645
+  sms_inbound_us: null
+  phone_number_local: 0.00
+  phone_number_tollfree: 0.00
+  verify_per_auth: 0.00
+  volume_discount: "AWS standard volume tiers"
+  free_trial: true
+  free_credits: 0.00
+
+features:
+  sms: true
+  voice: false
+  whatsapp: false
+  email: true
+  verify_otp: true
+  number_lookup: false
+  short_code: true
+  10dlc: true
+  flow_builder: null
+  sdk_languages: ["python", "node", "java", "go", "ruby", "php", "dotnet", "cpp", "rust"]
+
+compliance:
+  hipaa: true
+  soc2: true
+  pci_dss: "Level 1"
+  gdpr: true
+
+performance:
+  sla: "99.9%"
+  global_coverage: "200+ countries"
+
+pros:
+  - "Deep integration with the entire AWS ecosystem"
+  - "True pay-per-use pricing with no minimums or commitments"
+  - "Massive scale backed by AWS infrastructure"
+  - "Free tier includes 100 SMS per month"
+
+cons:
+  - "Not a full CPaaS platform, limited to basic SMS"
+  - "No voice API (requires Amazon Pinpoint or Connect)"
+  - "Complex IAM setup and AWS configuration overhead"
+  - "Limited features compared to dedicated CPaaS providers"
+
+best_for: "Teams already on AWS that want basic SMS capabilities without adding another vendor to their stack"
+verdict_vs_twilio: "Choose AWS SNS for basic SMS if you are fully committed to the AWS ecosystem and do not need advanced CPaaS features"

@@ -1,0 +1,53 @@
+slug: ringcentral
+name: RingCentral
+tagline: "Unified UCaaS and CPaaS platform with programmable SMS built into enterprise communications"
+founded: 1999
+hq: "Belmont, California"
+website: https://www.ringcentral.com
+
+pricing:
+  sms_outbound_us: 0.00850
+  sms_inbound_us: 0.00650
+  phone_number_local: 0.00
+  phone_number_tollfree: 0.00
+  verify_per_auth: null
+  volume_discount: "bundled with UCaaS plans"
+  free_trial: true
+  free_credits: 0.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: false
+  email: false
+  verify_otp: false
+  number_lookup: false
+  short_code: true
+  10dlc: true
+  flow_builder: null
+  sdk_languages: ["python", "node", "java", "csharp", "php"]
+
+compliance:
+  hipaa: true
+  soc2: true
+  pci_dss: false
+  gdpr: true
+
+performance:
+  sla: "99.999%"
+  global_coverage: "45+ countries"
+
+pros:
+  - "Integrated UCaaS and CPaaS in a single platform"
+  - "Excellent five-nines uptime SLA"
+  - "Strong enterprise brand recognition and trust"
+  - "Bundled communications reduce total cost for UCaaS customers"
+
+cons:
+  - "Primarily a UCaaS provider, not a pure CPaaS play"
+  - "Expensive as a standalone SMS API"
+  - "Limited international SMS coverage"
+  - "Developer API is secondary to the UCaaS product"
+
+best_for: "Companies already using RingCentral UCaaS that want to add programmable SMS to their existing platform"
+verdict_vs_twilio: "Choose RingCentral only if you are already in their UCaaS ecosystem and want bundled SMS capabilities"

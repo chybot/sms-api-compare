@@ -1,0 +1,52 @@
+slug: plivo
+name: Plivo
+tagline: "Cost-effective cloud communications with free inbound SMS and zero per-verification pricing"
+founded: 2011
+hq: "Austin, Texas"
+website: https://www.plivo.com
+
+pricing:
+  sms_outbound_us: 0.00500
+  sms_inbound_us: 0.00000
+  phone_number_local: 0.80
+  phone_number_tollfree: 1.50
+  verify_per_auth: 0.00
+  volume_discount: "30-70% at scale"
+  free_trial: true
+  free_credits: 25.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: false
+  email: false
+  verify_otp: true
+  number_lookup: true
+  short_code: true
+  10dlc: true
+  flow_builder: "PHLO"
+  sdk_languages: ["python", "node", "java", "ruby", "php", "go", "dotnet"]
+
+compliance:
+  hipaa: true
+  soc2: true
+  pci_dss: "Level 1"
+  gdpr: true
+
+performance:
+  sla: "99.99%"
+  global_coverage: "220+ countries"
+
+pros:
+  - "30-40% cheaper than Twilio on outbound SMS"
+  - "Free inbound SMS saves significantly at scale"
+  - "Zero per-verification pricing on Verify API"
+  - "PHLO visual workflow builder for no-code automation"
+
+cons:
+  - "Smaller developer ecosystem and community"
+  - "No WhatsApp or email channel support"
+  - "Less community content and third-party tutorials"
+
+best_for: "Cost-conscious startups and high-volume SMS senders who prioritize savings over omnichannel breadth"
+verdict_vs_twilio: "Choose Plivo if cost is your number one priority and you only need SMS and Voice channels"

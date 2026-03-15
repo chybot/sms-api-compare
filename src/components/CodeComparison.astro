@@ -1,0 +1,163 @@
+---
+interface Props {
+  providerA: string;
+  providerB: string;
+}
+
+const { providerA, providerB } = Astro.props;
+
+const snippets: Record<string, { label: string; code: string }> = {
+  twilio: {
+    label: 'Twilio',
+    code: `const twilio = require('twilio');
+const client = twilio(
+  process.env.TWILIO_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
+
+const message = await client.messages.create({
+  body: 'Hello from Twilio!',
+  from: '+15551234567',
+  to: '+15559876543',
+});
+
+console.log(message.sid);`,
+  },
+  plivo: {
+    label: 'Plivo',
+    code: `const plivo = require('plivo');
+const client = new plivo.Client(
+  process.env.PLIVO_AUTH_ID,
+  process.env.PLIVO_AUTH_TOKEN
+);
+
+const response = await client.messages.create({
+  src: '+15551234567',
+  dst: '+15559876543',
+  text: 'Hello from Plivo!',
+});
+
+console.log(response.messageUuid);`,
+  },
+  vonage: {
+    label: 'Vonage',
+    code: `const { Vonage } = require('@vonage/server-sdk');
+const vonage = new Vonage({
+  apiKey: process.env.VONAGE_API_KEY,
+  apiSecret: process.env.VONAGE_API_SECRET,
+});
+
+const response = await vonage.sms.send({
+  to: '15559876543',
+  from: '15551234567',
+  text: 'Hello from Vonage!',
+});
+
+console.log(response.messages[0].messageId);`,
+  },
+  telnyx: {
+    label: 'Telnyx',
+    code: `const telnyx = require('telnyx')(
+  process.env.TELNYX_API_KEY
+);
+
+const message = await telnyx.messages.create({
+  from: '+15551234567',
+  to: '+15559876543',
+  text: 'Hello from Telnyx!',
+});
+
+console.log(message.data.id);`,
+  },
+  bandwidth: {
+    label: 'Bandwidth',
+    code: `const { Client, ApiController }
+  = require('@bandwidth/messaging');
+
+const client = new Client({
+  basicAuthUserName: process.env.BW_USERNAME,
+  basicAuthPassword: process.env.BW_PASSWORD,
+});
+
+const controller = new ApiController(client);
+const response = await controller.createMessage(
+  process.env.BW_ACCOUNT_ID,
+  {
+    from: '+15551234567',
+    to: ['+15559876543'],
+    text: 'Hello from Bandwidth!',
+    applicationId: process.env.BW_APP_ID,
+  }
+);
+
+console.log(response.result.id);`,
+  },
+  sinch: {
+    label: 'Sinch',
+    code: `const { SinchClient } = require('@sinch/sdk-core');
+const sinch = new SinchClient({
+  projectId: process.env.SINCH_PROJECT_ID,
+  keyId: process.env.SINCH_KEY_ID,
+  keySecret: process.env.SINCH_KEY_SECRET,
+});
+
+const response = await sinch.sms.batches.send({
+  sendSMSRequestBody: {
+    from: '+15551234567',
+    to: ['+15559876543'],
+    body: 'Hello from Sinch!',
+  },
+});
+
+console.log(response.id);`,
+  },
+};
+
+function getSnippet(slug: string) {
+  return snippets[slug] ?? null;
+}
+
+const snippetA = getSnippet(providerA);
+const snippetB = getSnippet(providerB);
+---
+
+<div>
+  <h3 class="text-xl font-bold text-gray-900 mb-4">Send SMS Code Example</h3>
+  <p class="text-sm text-gray-500 mb-6">Node.js examples for sending an SMS with each provider.</p>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <!-- Provider A -->
+    <div>
+      <div class="bg-gray-900 rounded-t-xl px-4 py-2 flex items-center justify-between">
+        <span class="text-sm font-medium text-gray-300">{snippetA?.label ?? providerA}</span>
+        <span class="text-xs text-gray-500">Node.js</span>
+      </div>
+      <div class="bg-gray-900 rounded-b-xl p-4 overflow-x-auto">
+        {snippetA ? (
+          <pre class="text-sm leading-relaxed"><code class="text-green-400 font-mono whitespace-pre">{snippetA.code}</code></pre>
+        ) : (
+          <p class="text-sm text-gray-400 italic">
+            See <a href={`https://${providerA}.com/docs`} target="_blank" rel="noopener" class="text-green-400 underline">{providerA} docs</a> for code examples.
+          </p>
+        )}
+      </div>
+    </div>
+
+    <!-- Provider B -->
+    <div>
+      <div class="bg-gray-900 rounded-t-xl px-4 py-2 flex items-center justify-between">
+        <span class="text-sm font-medium text-gray-300">{snippetB?.label ?? providerB}</span>
+        <span class="text-xs text-gray-500">Node.js</span>
+      </div>
+      <div class="bg-gray-900 rounded-b-xl p-4 overflow-x-auto">
+        {snippetB ? (
+          <pre class="text-sm leading-relaxed"><code class="text-green-400 font-mono whitespace-pre">{snippetB.code}</code></pre>
+        ) : (
+          <p class="text-sm text-gray-400 italic">
+            See <a href={`https://${providerB}.com/docs`} target="_blank" rel="noopener" class="text-green-400 underline">{providerB} docs</a> for code examples.
+          </p>
+        )}
+      </div>
+    </div>
+  </div>
+</div>

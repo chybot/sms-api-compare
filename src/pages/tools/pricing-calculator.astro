@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllProviders } from '../../data/providers';
+
+const providers = getAllProviders();
+
+const title = 'SMS API Pricing Calculator - Compare Provider Costs';
+const description = 'Estimate your monthly SMS costs across all major API providers. Enter your volume and see real-time cost comparisons for Twilio, Plivo, Vonage, and more.';
+
+// Pre-serialize provider data for the client-side calculator
+const providerData = providers
+  .filter(p => p.pricing.sms_outbound_us !== null)
+  .map(p => ({
+    slug: p.slug,
+    name: p.name,
+    sms_outbound_us: p.pricing.sms_outbound_us,
+    sms_inbound_us: p.pricing.sms_inbound_us,
+    phone_number_local: p.pricing.phone_number_local,
+    phone_number_tollfree: p.pricing.phone_number_tollfree,
+  }));
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-sm text-gray-500">
+        <li><a href="/" class="hover:text-primary transition-colors">Home</a></li>
+        <li class="before:content-['/'] before:mx-2 before:text-gray-300">
+          <a href="/" class="hover:text-primary transition-colors">Tools</a>
+        </li>
+        <li class="before:content-['/'] before:mx-2 before:text-gray-300">
+          <span class="text-gray-900 font-medium">Pricing Calculator</span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">SMS API Pricing Calculator</h1>
+      <p class="mt-4 text-lg text-gray-600 max-w-3xl">
+        Enter your expected monthly SMS volume below to see estimated costs across all major providers. Prices are based on US outbound and inbound rates.
+      </p>
+    </div>
+
+    <!-- Calculator -->
+    <div id="pricing-calculator" class="mb-12">
+      <!-- Input Form -->
+      <div class="bg-white rounded-xl border border-border p-6 mb-8">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Your SMS Volume</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div>
+            <label for="outbound-volume" class="block text-sm font-medium text-gray-700 mb-1">Monthly Outbound SMS</label>
+            <input
+              type="number"
+              id="outbound-volume"
+              value="10000"
+              min="0"
+              step="1000"
+              class="w-full rounded-lg border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            />
+          </div>
+          <div>
+            <label for="inbound-volume" class="block text-sm font-medium text-gray-700 mb-1">Monthly Inbound SMS</label>
+            <input
+              type="number"
+              id="inbound-volume"
+              value="2000"
+              min="0"
+              step="1000"
+              class="w-full rounded-lg border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            />
+          </div>
+          <div>
+            <label for="phone-numbers" class="block text-sm font-medium text-gray-700 mb-1">Local Phone Numbers</label>
+            <input
+              type="number"
+              id="phone-numbers"
+              value="2"
+              min="0"
+              step="1"
+              class="w-full rounded-lg border border-border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border border-border rounded-xl overflow-hidden" id="results-table">
+          <thead>
+            <tr class="bg-surface">
+              <th class="text-left p-4 font-semibold text-gray-700">Provider</th>
+              <th class="text-right p-4 font-semibold text-gray-700">Outbound Cost</th>
+              <th class="text-right p-4 font-semibold text-gray-700">Inbound Cost</th>
+              <th class="text-right p-4 font-semibold text-gray-700">Number Cost</th>
+              <th class="text-right p-4 font-semibold text-gray-700 text-primary">Total / mo</th>
+              <th class="text-center p-4 font-semibold text-gray-700">Compare</th>
+            </tr>
+          </thead>
+          <tbody id="results-body" class="divide-y divide-border">
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-400 mt-4">
+        Prices are estimates based on published per-message rates for US traffic. Actual costs may vary based on volume discounts, destination, and carrier surcharges.
+      </p>
+    </div>
+
+    <!-- Helpful links -->
+    <section>
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Explore More</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="/compare/twilio-vs-plivo" class="group block bg-white rounded-xl border border-border p-4 hover:shadow-md hover:border-primary/30 transition-all">
+          <h3 class="font-medium text-gray-900 group-hover:text-primary transition-colors text-sm">Twilio vs Plivo</h3>
+          <p class="text-xs text-gray-500 mt-1">The most popular comparison</p>
+        </a>
+        <a href="/compare/twilio-vs-vonage" class="group block bg-white rounded-xl border border-border p-4 hover:shadow-md hover:border-primary/30 transition-all">
+          <h3 class="font-medium text-gray-900 group-hover:text-primary transition-colors text-sm">Twilio vs Vonage</h3>
+          <p class="text-xs text-gray-500 mt-1">Two enterprise heavyweights</p>
+        </a>
+        <a href="/twilio-alternatives" class="group block bg-white rounded-xl border border-border p-4 hover:shadow-md hover:border-primary/30 transition-all">
+          <h3 class="font-medium text-gray-900 group-hover:text-primary transition-colors text-sm">Twilio Alternatives</h3>
+          <p class="text-xs text-gray-500 mt-1">All alternatives ranked</p>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <script define:vars={{ providerData }}>
+    function calculate() {
+      const outbound = parseInt(document.getElementById('outbound-volume').value) || 0;
+      const inbound = parseInt(document.getElementById('inbound-volume').value) || 0;
+      const numbers = parseInt(document.getElementById('phone-numbers').value) || 0;
+
+      const results = providerData.map(p => {
+        const outboundCost = outbound * (p.sms_outbound_us || 0);
+        const inboundCost = inbound * (p.sms_inbound_us || 0);
+        const numberCost = numbers * (p.phone_number_local || 0);
+        const total = outboundCost + inboundCost + numberCost;
+        return { ...p, outboundCost, inboundCost, numberCost, total };
+      });
+
+      results.sort((a, b) => a.total - b.total);
+
+      const tbody = document.getElementById('results-body');
+      tbody.innerHTML = results.map((r, i) => `
+        <tr class="${i % 2 === 1 ? 'bg-surface/50' : ''}">
+          <td class="p-4">
+            <div class="flex items-center gap-2">
+              ${i === 0 ? '<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-accent text-white text-xs font-bold">1</span>' : `<span class="text-xs text-gray-400 w-5 text-center">${i + 1}</span>`}
+              <span class="font-medium text-gray-900">${r.name}</span>
+            </div>
+          </td>
+          <td class="p-4 text-right font-mono text-gray-700">$${r.outboundCost.toFixed(2)}</td>
+          <td class="p-4 text-right font-mono text-gray-700">$${r.inboundCost.toFixed(2)}</td>
+          <td class="p-4 text-right font-mono text-gray-700">$${r.numberCost.toFixed(2)}</td>
+          <td class="p-4 text-right font-mono font-semibold ${i === 0 ? 'text-accent' : 'text-gray-900'}">$${r.total.toFixed(2)}</td>
+          <td class="p-4 text-center">
+            <a href="/reviews/${r.slug}" class="text-primary hover:underline text-sm">Review</a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('outbound-volume').addEventListener('input', calculate);
+    document.getElementById('inbound-volume').addEventListener('input', calculate);
+    document.getElementById('phone-numbers').addEventListener('input', calculate);
+
+    // Run on load
+    calculate();
+  </script>
+</BaseLayout>

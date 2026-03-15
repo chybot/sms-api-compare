@@ -1,0 +1,58 @@
+---
+interface Props {
+  type: 'comparison' | 'review' | 'guide' | 'tool';
+  providerA?: { name: string; slug: string; description?: string };
+  providerB?: { name: string; slug: string; description?: string };
+  title?: string;
+  breadcrumbs?: { name: string; url: string }[];
+}
+
+const { type, providerA, providerB, title, breadcrumbs = [] } = Astro.props;
+
+const schemas: object[] = [];
+
+// BreadcrumbList schema
+if (breadcrumbs.length > 0) {
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: crumb.url,
+    })),
+  });
+}
+
+// Comparison-specific Product schemas
+if (type === 'comparison' && providerA && providerB) {
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `${providerA.name} SMS API`,
+    description: providerA.description ?? `${providerA.name} SMS and communications API platform.`,
+    category: 'SMS API',
+    brand: {
+      '@type': 'Brand',
+      name: providerA.name,
+    },
+  });
+
+  schemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `${providerB.name} SMS API`,
+    description: providerB.description ?? `${providerB.name} SMS and communications API platform.`,
+    category: 'SMS API',
+    brand: {
+      '@type': 'Brand',
+      name: providerB.name,
+    },
+  });
+}
+---
+
+{schemas.map((schema) => (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+))}

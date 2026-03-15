@@ -1,0 +1,53 @@
+slug: infobip
+name: Infobip
+tagline: "Enterprise omnichannel platform supporting 60+ communication channels with own network infrastructure"
+founded: 2006
+hq: "Vodnjan, Croatia"
+website: https://www.infobip.com
+
+pricing:
+  sms_outbound_us: 0.00650
+  sms_inbound_us: 0.00650
+  phone_number_local: 0.00
+  phone_number_tollfree: 0.00
+  verify_per_auth: 0.05
+  volume_discount: "fully custom enterprise pricing"
+  free_trial: true
+  free_credits: 0.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: true
+  email: true
+  verify_otp: true
+  number_lookup: true
+  short_code: true
+  10dlc: true
+  flow_builder: "Moments"
+  sdk_languages: ["python", "node", "java", "ruby", "php", "go"]
+
+compliance:
+  hipaa: true
+  soc2: true
+  pci_dss: "Level 1"
+  gdpr: true
+
+performance:
+  sla: "99.99%"
+  global_coverage: "220+ countries"
+
+pros:
+  - "Massive omnichannel support with 60+ communication channels"
+  - "Owns network infrastructure for direct carrier connections"
+  - "Excellent enterprise support with dedicated account management"
+  - "Strong compliance posture with SOC2, HIPAA, and PCI DSS Level 1"
+
+cons:
+  - "No public pricing requires contacting sales"
+  - "Enterprise-focused and not SMB-friendly"
+  - "Complex onboarding process for new customers"
+  - "Overkill for simple SMS use cases"
+
+best_for: "Large enterprises needing 60+ communication channels with enterprise SLAs and full compliance certifications"
+verdict_vs_twilio: "Choose Infobip for maximum channel coverage and enterprise-grade compliance when you need more than Twilio offers"

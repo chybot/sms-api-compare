@@ -1,0 +1,106 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Provider {
+  name: string;
+  slug: string;
+}
+
+interface Props {
+  providerA: Provider;
+  providerB: Provider;
+  title: string;
+  description: string;
+}
+
+const { providerA, providerB, title, description } = Astro.props;
+
+const breadcrumbLD = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: 'https://smsapicompare.com/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Comparisons',
+      item: 'https://smsapicompare.com/compare/',
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: `${providerA.name} vs ${providerB.name}`,
+      item: `https://smsapicompare.com/compare/${providerA.slug}-vs-${providerB.slug}`,
+    },
+  ],
+};
+
+const faqLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [],
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLD)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqLD)} />
+  </Fragment>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-8">
+      <ol class="flex items-center gap-2 text-sm text-gray-500">
+        <li><a href="/" class="hover:text-primary transition-colors">Home</a></li>
+        <li class="before:content-['/'] before:mx-2 before:text-gray-300">
+          <a href="/compare/twilio-vs-plivo" class="hover:text-primary transition-colors">Comparisons</a>
+        </li>
+        <li class="before:content-['/'] before:mx-2 before:text-gray-300">
+          <span class="text-gray-900 font-medium">{providerA.name} vs {providerB.name}</span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Comparison Header -->
+    <div class="bg-surface rounded-2xl border border-border p-8 mb-10">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+        <!-- Provider A -->
+        <div class="text-center">
+          <div class="w-16 h-16 rounded-xl bg-white border border-border flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-primary">
+            {providerA.name.charAt(0)}
+          </div>
+          <h2 class="text-xl font-bold text-gray-900">{providerA.name}</h2>
+        </div>
+
+        <!-- VS Badge -->
+        <div class="flex-shrink-0">
+          <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary text-white text-lg font-extrabold shadow-lg">
+            VS
+          </span>
+        </div>
+
+        <!-- Provider B -->
+        <div class="text-center">
+          <div class="w-16 h-16 rounded-xl bg-white border border-border flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-primary">
+            {providerB.name.charAt(0)}
+          </div>
+          <h2 class="text-xl font-bold text-gray-900">{providerB.name}</h2>
+        </div>
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-center mt-6 text-gray-900">
+        {providerA.name} vs {providerB.name}
+      </h1>
+      <p class="text-center text-gray-500 mt-2 max-w-2xl mx-auto">{description}</p>
+    </div>
+
+    <!-- Main Content -->
+    <slot />
+  </div>
+</BaseLayout>

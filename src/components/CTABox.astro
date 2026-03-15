@@ -1,0 +1,74 @@
+---
+interface Provider {
+  name: string;
+  slug: string;
+  website?: string;
+}
+
+interface Props {
+  providerA: Provider;
+  providerB: Provider;
+  winner?: string;
+}
+
+const { providerA, providerB, winner } = Astro.props;
+
+const campaign = `${providerA.slug}-vs-${providerB.slug}`;
+const utmParams = `utm_source=smsapicompare&utm_medium=comparison&utm_campaign=${campaign}`;
+
+function buildCTAUrl(provider: Provider): string {
+  const base = provider.website ?? `https://${provider.slug}.com`;
+  const separator = base.includes('?') ? '&' : '?';
+  return `${base}${separator}${utmParams}`;
+}
+---
+
+<div class="bg-surface border border-border rounded-2xl p-8 mt-12">
+  <!-- Winner Highlight -->
+  {winner && (
+    <div class="text-center mb-6">
+      <span class="inline-block bg-accent text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2">
+        Our Pick
+      </span>
+      <p class="text-lg font-bold text-gray-900">
+        We recommend <span class="text-primary">{winner}</span> for most use cases.
+      </p>
+    </div>
+  )}
+
+  <!-- CTA Buttons -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+    <a
+      href={buildCTAUrl(providerA)}
+      target="_blank"
+      rel="noopener sponsored"
+      class="flex items-center justify-center gap-2 bg-primary text-white font-semibold py-3 px-6 rounded-xl hover:bg-primary-dark transition-colors text-center"
+    >
+      Try {providerA.name} Free
+      <span aria-hidden="true">&rarr;</span>
+    </a>
+    <a
+      href={buildCTAUrl(providerB)}
+      target="_blank"
+      rel="noopener sponsored"
+      class="flex items-center justify-center gap-2 bg-white text-primary font-semibold py-3 px-6 rounded-xl border-2 border-primary hover:bg-primary/5 transition-colors text-center"
+    >
+      Try {providerB.name} Free
+      <span aria-hidden="true">&rarr;</span>
+    </a>
+  </div>
+
+  <!-- Calculator Link -->
+  <div class="text-center pt-6 border-t border-border">
+    <p class="text-sm text-gray-500 mb-2">Need help choosing?</p>
+    <a
+      href="/tools/pricing-calculator"
+      class="inline-flex items-center gap-1 text-sm font-semibold text-secondary hover:underline"
+    >
+      Use our Pricing Calculator
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  </div>
+</div>

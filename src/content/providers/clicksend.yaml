@@ -1,0 +1,53 @@
+slug: clicksend
+name: ClickSend
+tagline: "Simple, transparent transactional messaging for businesses that want SMS without the complexity"
+founded: 2013
+hq: "Perth, Australia"
+website: https://www.clicksend.com
+
+pricing:
+  sms_outbound_us: 0.00694
+  sms_inbound_us: 0.00000
+  phone_number_local: 1.30
+  phone_number_tollfree: 2.50
+  verify_per_auth: null
+  volume_discount: "tiered from $0.0188 down to $0.00694"
+  free_trial: true
+  free_credits: 2.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: false
+  email: true
+  verify_otp: false
+  number_lookup: false
+  short_code: false
+  10dlc: true
+  flow_builder: null
+  sdk_languages: ["python", "node", "java", "ruby", "php", "csharp"]
+
+compliance:
+  hipaa: false
+  soc2: false
+  pci_dss: false
+  gdpr: true
+
+performance:
+  sla: "99.95%"
+  global_coverage: "240+ countries"
+
+pros:
+  - "Simple and transparent pay-as-you-go pricing"
+  - "Easy to use with minimal setup required"
+  - "Multi-channel support including SMS, email, fax, and post"
+  - "Good documentation with clear API reference"
+
+cons:
+  - "No advanced CPaaS features like flow builders"
+  - "No verify or OTP API"
+  - "Limited developer tools and SDKs"
+  - "No visual workflow builder"
+
+best_for: "Small businesses needing simple transactional SMS without the complexity of full CPaaS platforms"
+verdict_vs_twilio: "Choose ClickSend for simplicity and transparent pay-as-you-go pricing when you do not need advanced features"

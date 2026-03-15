@@ -1,0 +1,154 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalURL?: string;
+}
+
+const { title, description, ogImage = '/og-default.png', canonicalURL } = Astro.props;
+const siteURL = Astro.site?.toString() ?? 'https://smsapicompare.com';
+const canonical = canonicalURL ?? Astro.url.href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="SMS API Compare" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <title>{title}</title>
+
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen flex flex-col bg-white text-gray-900">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white border-b border-border">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo -->
+          <a href="/" class="flex items-center gap-2 text-xl font-bold text-primary">
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            SMS API Compare
+          </a>
+
+          <!-- Desktop Nav -->
+          <nav class="hidden md:flex items-center gap-8">
+            <a href="/" class="text-sm font-medium text-gray-600 hover:text-primary transition-colors">Home</a>
+            <a href="/compare/twilio-vs-plivo" class="text-sm font-medium text-gray-600 hover:text-primary transition-colors">Comparisons</a>
+            <a href="/#alternatives" class="text-sm font-medium text-gray-600 hover:text-primary transition-colors">Alternatives</a>
+            <a href="/tools/pricing-calculator" class="text-sm font-medium text-gray-700 hover:text-white bg-primary/10 hover:bg-primary px-4 py-2 rounded-lg transition-all">
+              Pricing Calculator
+            </a>
+          </nav>
+
+          <!-- Mobile Hamburger -->
+          <button
+            id="mobile-menu-btn"
+            class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+          >
+            <svg id="menu-icon-open" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden border-t border-border bg-white">
+        <nav class="flex flex-col px-4 py-4 gap-3">
+          <a href="/" class="text-sm font-medium text-gray-600 hover:text-primary py-2 transition-colors">Home</a>
+          <a href="/compare/twilio-vs-plivo" class="text-sm font-medium text-gray-600 hover:text-primary py-2 transition-colors">Comparisons</a>
+          <a href="/#alternatives" class="text-sm font-medium text-gray-600 hover:text-primary py-2 transition-colors">Alternatives</a>
+          <a href="/tools/pricing-calculator" class="text-sm font-medium text-white bg-primary px-4 py-2 rounded-lg text-center transition-colors hover:bg-primary-dark">
+            Pricing Calculator
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-border mt-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Brand -->
+          <div>
+            <a href="/" class="text-lg font-bold text-primary">SMS API Compare</a>
+            <p class="mt-2 text-sm text-gray-500">
+              Unbiased comparisons of SMS API providers to help you choose the right platform.
+            </p>
+          </div>
+
+          <!-- Links -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Resources</h3>
+            <ul class="mt-3 space-y-2">
+              <li><a href="/compare/twilio-vs-plivo" class="text-sm text-gray-500 hover:text-primary transition-colors">Comparisons</a></li>
+              <li><a href="/#alternatives" class="text-sm text-gray-500 hover:text-primary transition-colors">Alternatives</a></li>
+              <li><a href="/tools/pricing-calculator" class="text-sm text-gray-500 hover:text-primary transition-colors">Pricing Calculator</a></li>
+            </ul>
+          </div>
+
+          <!-- Legal -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Legal</h3>
+            <ul class="mt-3 space-y-2">
+              <li><a href="/privacy" class="text-sm text-gray-500 hover:text-primary transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms" class="text-sm text-gray-500 hover:text-primary transition-colors">Terms of Use</a></li>
+              <li><a href="/disclosure" class="text-sm text-gray-500 hover:text-primary transition-colors">Affiliate Disclosure</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-10 pt-8 border-t border-border text-center">
+          <p class="text-sm text-gray-400">
+            &copy; {new Date().getFullYear()} SMS API Compare. All rights reserved. Pricing data is updated regularly but may not reflect real-time changes.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      const iconOpen = document.getElementById('menu-icon-open');
+      const iconClose = document.getElementById('menu-icon-close');
+
+      btn?.addEventListener('click', () => {
+        const isOpen = menu?.classList.toggle('hidden') === false;
+        iconOpen?.classList.toggle('hidden', isOpen);
+        iconClose?.classList.toggle('hidden', !isOpen);
+        btn.setAttribute('aria-expanded', String(isOpen));
+      });
+    </script>
+  </body>
+</html>

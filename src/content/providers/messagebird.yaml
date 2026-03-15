@@ -1,0 +1,53 @@
+slug: messagebird
+name: Bird
+tagline: "European-first omnichannel platform with an intuitive Flow Builder, formerly MessageBird"
+founded: 2011
+hq: "Amsterdam, Netherlands"
+website: https://www.bird.com
+
+pricing:
+  sms_outbound_us: 0.00700
+  sms_inbound_us: 0.00700
+  phone_number_local: 1.00
+  phone_number_tollfree: 2.00
+  verify_per_auth: 0.05
+  volume_discount: "custom enterprise pricing"
+  free_trial: true
+  free_credits: 0.00
+
+features:
+  sms: true
+  voice: true
+  whatsapp: true
+  email: true
+  verify_otp: true
+  number_lookup: true
+  short_code: false
+  10dlc: true
+  flow_builder: "Flow Builder"
+  sdk_languages: ["python", "node", "java", "ruby", "php", "go"]
+
+compliance:
+  hipaa: false
+  soc2: true
+  pci_dss: false
+  gdpr: true
+
+performance:
+  sla: "99.95%"
+  global_coverage: "190+ countries"
+
+pros:
+  - "Excellent omnichannel platform with unified inbox"
+  - "Intuitive Flow Builder for visual automation"
+  - "Strong European presence and GDPR-first approach"
+  - "Official WhatsApp Business Solution Provider"
+
+cons:
+  - "Rebranding confusion from MessageBird to Bird"
+  - "Pricing less transparent, requires contacting sales"
+  - "Smaller US presence compared to Twilio or Plivo"
+  - "Short code support is limited"
+
+best_for: "European companies needing omnichannel messaging with strong WhatsApp support and visual workflow automation"
+verdict_vs_twilio: "Choose Bird/MessageBird for European-first omnichannel with a great Flow Builder UX and strong GDPR compliance"
