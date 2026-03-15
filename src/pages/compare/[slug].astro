@@ -76,6 +76,8 @@ const faqs = [
   },
 ];
 
+const siteURL = 'https://sms-api-compare.pages.dev';
+
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -89,15 +91,54 @@ const faqSchema = {
   })),
 };
 
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteURL },
+    { '@type': 'ListItem', position: 2, name: 'Compare', item: `${siteURL}/compare/twilio-vs-plivo` },
+    { '@type': 'ListItem', position: 3, name: `${a.name} vs ${b.name}` },
+  ],
+};
+
+const productSchemaA = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: `${a.name} SMS API`,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Cloud',
+  description: a.tagline,
+  offers: a.pricing.sms_outbound_us !== null ? {
+    '@type': 'Offer',
+    price: a.pricing.sms_outbound_us.toString(),
+    priceCurrency: 'USD',
+    description: 'Per outbound SMS (US)',
+  } : undefined,
+};
+
+const productSchemaB = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: `${b.name} SMS API`,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Cloud',
+  description: b.tagline,
+  offers: b.pricing.sms_outbound_us !== null ? {
+    '@type': 'Offer',
+    price: b.pricing.sms_outbound_us.toString(),
+    priceCurrency: 'USD',
+    description: 'Per outbound SMS (US)',
+  } : undefined,
+};
+
+const jsonLd = [faqSchema, breadcrumbSchema, productSchemaA, productSchemaB];
+
 const formatPrice = (price: number | null) => price !== null ? `$${price.toFixed(4)}` : 'N/A';
 const formatPriceDollars = (price: number | null) => price !== null ? `$${price.toFixed(2)}` : 'N/A';
 const check = (val: boolean) => val ? '\u2705' : '\u274C';
 ---
 
-<BaseLayout title={title} description={description}>
-  <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-  </Fragment>
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb -->

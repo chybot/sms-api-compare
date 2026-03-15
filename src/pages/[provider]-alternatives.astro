@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getAllProviders } from '../data/providers';
+import { getAllProviders, slugPriority } from '../data/providers';
 import type { Provider } from '../data/providers';
 import type { GetStaticPaths } from 'astro';
 
@@ -66,12 +66,21 @@ const faqSchema = {
     },
   ],
 };
+
+const siteURL = 'https://sms-api-compare.pages.dev';
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteURL },
+    { '@type': 'ListItem', position: 2, name: `${provider.name} Alternatives` },
+  ],
+};
+
+const jsonLd = [faqSchema, breadcrumbSchema];
 ---
 
-<BaseLayout title={title} description={description}>
-  <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-  </Fragment>
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Breadcrumb -->
@@ -151,7 +160,7 @@ const faqSchema = {
               </div>
 
               <a
-                href={`/compare/${[provider.slug, alt.slug].sort().join('-vs-')}`}
+                href={`/compare/${slugPriority(provider.slug) <= slugPriority(alt.slug) ? `${provider.slug}-vs-${alt.slug}` : `${alt.slug}-vs-${provider.slug}`}`}
                 class="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-dark transition-colors"
               >
                 Compare {provider.name} vs {alt.name}

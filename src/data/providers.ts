@@ -59,15 +59,31 @@ export function getProvider(slug: string): Provider | undefined {
   return getAllProviders().find(p => p.slug === slug);
 }
 
+// Priority order: higher-priority providers appear first in URL slugs
+// This ensures "twilio-vs-plivo" not "plivo-vs-twilio" (matches search intent)
+const SLUG_PRIORITY: Record<string, number> = {
+  twilio: 0, vonage: 1, plivo: 2, sinch: 3, messagebird: 4,
+  telnyx: 5, bandwidth: 6, infobip: 7, ringcentral: 8,
+  clicksend: 9, 'aws-sns': 10, 'firebase-auth': 11,
+};
+
+export function slugPriority(slug: string): number {
+  return SLUG_PRIORITY[slug] ?? 99;
+}
+
 export function getComparisonPairs(): { slugA: string; slugB: string; slug: string }[] {
   const providers = getAllProviders();
   const pairs: { slugA: string; slugB: string; slug: string }[] = [];
   for (let i = 0; i < providers.length; i++) {
     for (let j = i + 1; j < providers.length; j++) {
+      const a = providers[i].slug;
+      const b = providers[j].slug;
+      // Put higher-priority provider first in the slug
+      const [first, second] = slugPriority(a) <= slugPriority(b) ? [a, b] : [b, a];
       pairs.push({
-        slugA: providers[i].slug,
-        slugB: providers[j].slug,
-        slug: `${providers[i].slug}-vs-${providers[j].slug}`,
+        slugA: first,
+        slugB: second,
+        slug: `${first}-vs-${second}`,
       });
     }
   }
