@@ -2,8 +2,7 @@ import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = () => {
   const robotsTxt = `User-agent: *
-Allow: /
-Sitemap: https://sms-api-compare.pages.dev/sitemap-index.xml
+Disallow: /
 `;
 
   return new Response(robotsTxt, {
